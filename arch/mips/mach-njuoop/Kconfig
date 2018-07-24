@@ -1,0 +1,17 @@
+menu "NJUOOP platforms"
+    depends on MACH_NJUOOP
+
+choice
+    prompt "Board select"
+
+config TARGET_NEMU_MIPS32
+    bool "NEMU-mips32 architecture"
+
+config TARGET_NJUOOP_NPC
+    bool "FPGA-zedboard board used in loongson cup"
+
+endchoice
+
+source "board/njuoop/Kconfig"
+
+endmenu

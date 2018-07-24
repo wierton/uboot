@@ -1,0 +1,15 @@
+if TARGET_NEMU_MIPS32 || TARGET_NJUOOP_NPC
+
+config SYS_BOARD
+    default "FPGA-zedboard"
+
+config SYS_VENDOR
+    default "njuoop"
+
+config SYS_CONFIG_NAME
+    default "mips32_njuoop"
+
+config SYS_TEXT_BASE
+    default 0x80000000
+
+endif
