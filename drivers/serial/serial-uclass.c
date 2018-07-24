@@ -15,6 +15,8 @@
 #include <dm/device-internal.h>
 #include <dm/of_access.h>
 
+#include <sysdbg.h>
+
 DECLARE_GLOBAL_DATA_PTR;
 
 /*
@@ -79,6 +81,7 @@ static void serial_find_console_or_panic(void)
 
 	if (CONFIG_IS_ENABLED(OF_PLATDATA)) {
 		uclass_first_device(UCLASS_SERIAL, &dev);
+		logd("dev is %p\n", dev);
 		if (dev) {
 			gd->cur_serial_dev = dev;
 			return;
@@ -86,7 +89,9 @@ static void serial_find_console_or_panic(void)
 	} else if (CONFIG_IS_ENABLED(OF_CONTROL) && blob) {
 		/* Live tree has support for stdout */
 		if (of_live_active()) {
+			logd("of_live_active is true\n", dev);
 			struct device_node *np = of_get_stdout();
+			logd("np is %p\n", np);
 
 			if (np && !uclass_get_device_by_ofnode(UCLASS_SERIAL,
 					np_to_ofnode(np), &dev)) {
@@ -94,6 +99,7 @@ static void serial_find_console_or_panic(void)
 				return;
 			}
 		} else {
+			logd("of_live_active is false\n", dev);
 			if (!serial_check_stdout(blob, &dev)) {
 				gd->cur_serial_dev = dev;
 				return;
@@ -101,6 +107,7 @@ static void serial_find_console_or_panic(void)
 		}
 	}
 	if (!SPL_BUILD || !CONFIG_IS_ENABLED(OF_CONTROL) || !blob) {
+	  logd("!SPL_BUILD || !CONFIG_IS_ENABLED(OF_CONTROL) || !blob\n");
 		/*
 		 * Try to use CONFIG_CONS_INDEX if available (it is numbered
 		 * from 1!).

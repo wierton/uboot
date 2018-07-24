@@ -18,6 +18,13 @@
 #define in_le32(a)   readl(a)
 #endif
 
+#ifndef out_be32
+#define out_be32(a,v)   writeb(v,a)
+#endif
+#ifndef in_be32
+#define in_be32(a)   readb(a)
+#endif
+
 #define CONFIG_TIMESTAMP	/* Print image info with timestamp */
 
 #define CONFIG_EXTRA_ENV_SETTINGS					\
@@ -38,9 +45,7 @@
 
 #define CONFIG_SYS_MALLOC_LEN		(256 << 10)
 
-#define CONFIG_SYS_BOOTPARAMS_LEN	128*1024
-
-#define CONFIG_SYS_MHZ			132
+#define CONFIG_SYS_MHZ			50
 
 #define CONFIG_SYS_MIPS_TIMER_FREQ	(CONFIG_SYS_MHZ * 1000000)
 
@@ -48,10 +53,7 @@
 #define CONFIG_SYS_SDRAM_BASE		0x80000000
 
 /* default load address */
-#define CONFIG_SYS_LOAD_ADDR		0x81000000
-
-#define CONFIG_SYS_MEMTEST_START	0x80100000
-#define CONFIG_SYS_MEMTEST_END		0x80800000
+#define CONFIG_SYS_LOAD_ADDR		0x80000000
 
 /*-----------------------------------------------------------------------
  * FLASH and environment organization
@@ -75,10 +77,9 @@
 
 #define CONFIG_ENV_OVERWRITE	1
 
-#define MEM_SIZE		128
+#define CONFIG_SYS_SDRAM_SIZE (128 * 1024 * 1024)
 
-#define CONFIG_SYS_SDRAM_SIZE (MEM_SIZE * 1024 * 1024)
-
+/* lowlevel init is not needed */
 #define CONFIG_SKIP_LOWLEVEL_INIT
 
 #endif /* __CONFIG_H */
