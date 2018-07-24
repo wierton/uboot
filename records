@@ -1,0 +1,3 @@
+CONFIG_SUPPORT_OF_CONTROL=y enable dtb
+CONFIG_OF_SEPARATE=y separate dtb and uboot
+
