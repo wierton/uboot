@@ -125,6 +125,7 @@ config TARGET_XILFPGA
 
 config MACH_NJUOOP
 	bool "Support NJU oop and NEMU-mips32"
+	select OF_CONTROL
 	select DM
 	select DM_SERIAL
 	select SUPPORTS_LITTLE_ENDIAN

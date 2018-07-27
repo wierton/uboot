@@ -87,6 +87,7 @@ static int uartlite_serial_ofdata_to_platdata(struct udevice *dev)
 	struct uartlite_platdata *plat = dev_get_platdata(dev);
 
 	plat->regs = (struct uartlite *)devfdt_get_addr(dev);
+	debug("plat->regs = %p\n", plat->regs);
 
 	return 0;
 }
@@ -100,8 +101,11 @@ static const struct dm_serial_ops uartlite_serial_ops = {
 static const struct udevice_id uartlite_serial_ids[] = {
 	{ .compatible = "xlnx,opb-uartlite-1.00.b", },
 	{ .compatible = "xlnx,xps-uartlite-1.00.a" },
+	{ .compatible = "njuoop_uartlite" },
 	{ }
 };
+
+/* define platdata */
 
 U_BOOT_DRIVER(serial_uartlite) = {
 	.name	= "njuoop_uartlite",
@@ -113,6 +117,16 @@ U_BOOT_DRIVER(serial_uartlite) = {
 	.ops	= &uartlite_serial_ops,
 	.flags = DM_FLAG_PRE_RELOC,
 };
+
+/* avoid using this method, use device tree to replace it */
+/*
+static uartlite_platdata uartlite_platdata;
+
+U_BOOT_DEVICE(serial_njuoop) = {
+  .name = "serial",
+  .platdata = &uartlite_platdata,
+};
+*/
 
 #ifdef CONFIG_DEBUG_UART_NJUOOP_UARTLITE
 

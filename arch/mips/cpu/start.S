@@ -51,6 +51,8 @@
 	sdbbp	1		# Invoke UHI operation
 	.endm
 
+	/* include/asm-generic/global_data.h: gd_t */
+/* arch/mips/include/asm/global_data.h: DECLARE_GLOBAL_DATA_PTR */
 	.macro setup_stack_gd
 	li	t0, -16
 	PTR_LI	t1, CONFIG_SYS_INIT_SP_ADDR
@@ -265,14 +267,14 @@ wr_done:
 
 # ifdef CONFIG_DEBUG_UART
 	/* Earliest point to set up debug uart */
-	PTR_LA	t9, debug_uart_init
+	PTR_LA	t9, debug_uart_init # drivers/serial/serial_njuoop.c
 	jalr	t9
 	 nop
 # endif
 #endif
 
 	move	a0, zero		# a0 <-- boot_flags = 0
-	PTR_LA	t9, board_init_f
+	PTR_LA	t9, board_init_f # common/board_f.c
 
 	jr	t9
 	 move	ra, zero

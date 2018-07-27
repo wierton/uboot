@@ -11,6 +11,8 @@
 #ifndef __MIPS32_NJUOOP_CONFIG_H
 #define __MIPS32_NJUOOP_CONFIG_H
 
+#define DEBUG // enable debug output
+
 #ifndef out_le32
 #define out_le32(a,v)   writel(v,a)
 #endif
