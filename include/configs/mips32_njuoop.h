@@ -53,6 +53,7 @@
 
 /* Cached addr */
 #define CONFIG_SYS_SDRAM_BASE		0x80000000
+#define CONFIG_SYS_SDRAM_SIZE (16 * 1024 * 1024)
 
 /* default load address */
 #define CONFIG_SYS_LOAD_ADDR		0x80000000
@@ -78,8 +79,6 @@
 #define CONFIG_ENV_ADDR		(CONFIG_SYS_FLASH_BASE + (4 << 20) - CONFIG_ENV_SIZE)
 
 #define CONFIG_ENV_OVERWRITE	1
-
-#define CONFIG_SYS_SDRAM_SIZE (128 * 1024 * 1024)
 
 /* lowlevel init is not needed */
 #define CONFIG_SKIP_LOWLEVEL_INIT

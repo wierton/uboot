@@ -24,11 +24,11 @@
 		reg = <0x1000000 0x20000000>;
 	};
 
-	njuoop_uartlite: serial@1fd03000 {
+	njuoop_uartlite: serial@bfd03000 {
 	  device_type = "serial";
 	  compatible = "njuoop_uartlite";
 	  /* unmapped uncached memory start at 0xA0000000 */
-	  reg = <0x1fd03000 0x1000>;
+	  reg = <0xbfd03000 0x1000>;
 	  reg-shift = <2>;
 	};
 };

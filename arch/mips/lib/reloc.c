@@ -118,11 +118,13 @@ void relocate_code(ulong start_addr_sp, gd_t *new_gd, ulong relocaddr)
 	 * space in the U-Boot binary & complexity in handling them.
 	 */
 	off = relocaddr - (unsigned long)__text_start;
+	debug("off is %08lx\n", off);
 	if (off & 0xffff)
 		panic("Mis-aligned relocation\n");
 
 	/* Copy U-Boot to RAM */
 	length = __image_copy_end - __text_start;
+	debug("copy from flash:%p to uram:%p, with length %lu\n", __text_start, (void*)relocaddr, length);
 	memcpy((void *)relocaddr, __text_start, length);
 
 	/* Now apply relocations to the copy in RAM */
@@ -137,14 +139,17 @@ void relocate_code(ulong start_addr_sp, gd_t *new_gd, ulong relocaddr)
 		apply_reloc(type, (void *)addr, off);
 	}
 
+	debug("try to flush cache\n");
 	/* Ensure the icache is coherent */
 	flush_cache(relocaddr, length);
 
+	debug("try to clear .bss section\n");
 	/* Clear the .bss section */
 	bss_start = (uint8_t *)((unsigned long)__bss_start + off);
 	bss_len = (unsigned long)&__bss_end - (unsigned long)__bss_start;
 	memset(bss_start, 0, bss_len);
 
+	debug("jump to relocated U-boot\n");
 	/* Jump to the relocated U-Boot */
 	asm volatile(
 		       "move	$29, %0\n"
