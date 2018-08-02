@@ -277,17 +277,22 @@ static int initr_of_live(void)
 }
 #endif
 
+void check_serial_addr(const char*);
+
 #ifdef CONFIG_DM
 static int initr_dm(void)
 {
 	int ret;
 
 	/* Save the pre-reloc driver model and start a new one */
+	check_serial_addr("set dm_root_f");
 	gd->dm_root_f = gd->dm_root;
+	check_serial_addr("clear dm_root");
 	gd->dm_root = NULL;
 #ifdef CONFIG_TIMER
 	gd->timer = NULL;
 #endif
+	check_serial_addr("init_and_scan");
 	bootstage_start(BOOTSTATE_ID_ACCUM_DM_R, "dm_r");
 	ret = dm_init_and_scan(false);
 	bootstage_accum(BOOTSTATE_ID_ACCUM_DM_R);
