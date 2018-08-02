@@ -13,6 +13,7 @@
 	aliases {
 	  serial = &njuoop_uartlite;
 	  console = &njuoop_uartlite;
+	  spi = &njuoop_spi;
 	};
 
 	/*
@@ -34,5 +35,20 @@
 	  /* unmapped uncached memory start at 0xA0000000 */
 	  reg = <0xbfd03000 0x1000>;
 	  reg-shift = <2>;
+	};
+
+	njuoop_spi: spi@bfd04000 {
+        #address-cells = <1>;
+        #size-cells = <0>;
+		compatible = "xlnx,xps-spi-2.00.a";
+		reg = <0x1e000000 0x1000>;
+		fifo-size = <256>;
+		xlnx,spi-mode = <2>; //quad spi mode
+
+        spi-flash@0 {
+            compatible = "jedec,spi-nor";
+            reg = <0>; /* Chip select 0 */
+            spi-max-frequency = <30000000>;
+        };
 	};
 };
