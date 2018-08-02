@@ -6,6 +6,10 @@
 	compatible = "noop";
 	model = "uart0";
 
+	chosen {
+	  stdout-path = "serial:115200ns";
+	};
+
 	aliases {
 	  serial = &njuoop_uartlite;
 	  console = &njuoop_uartlite;

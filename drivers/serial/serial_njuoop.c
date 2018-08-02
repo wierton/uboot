@@ -16,6 +16,11 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
+#define U_Rx     0x0
+#define U_Tx     0x4
+#define U_STAT   0x8
+#define U_CTRL   0xC
+
 #define SR_TX_FIFO_FULL		BIT(3) /* transmit FIFO full */
 #define SR_TX_FIFO_EMPTY	BIT(2) /* transmit FIFO empty */
 #define SR_RX_FIFO_VALID_DATA	BIT(0) /* data in receive FIFO */
@@ -45,6 +50,17 @@ static int uartlite_serial_putc(struct udevice *dev, const char ch)
 
 	out_be32(&regs->tx_fifo, ch & 0xff);
 
+  /*
+	struct uartlite_platdata *priv = dev_get_priv(dev);
+
+	struct uartlite *regs = plat->regs;
+
+	if (in_be32(&regs->status) & SR_TX_FIFO_FULL)
+		return -EAGAIN;
+
+	out_be32(&regs->tx_fifo, ch & 0xff);
+
+  */
 	return 0;
 }
 
@@ -72,25 +88,29 @@ static int uartlite_serial_pending(struct udevice *dev, bool input)
 
 static int uartlite_serial_probe(struct udevice *dev)
 {
+	/*
 	struct uartlite_platdata *plat = dev_get_platdata(dev);
 	struct uartlite *regs = plat->regs;
 
 	out_be32(&regs->control, 0);
 	out_be32(&regs->control, ULITE_CONTROL_RST_RX | ULITE_CONTROL_RST_TX);
 	in_be32(&regs->control);
+	*/
 
-	return 0;
-}
-
-static int uartlite_serial_ofdata_to_platdata(struct udevice *dev)
-{
+	fdt_size_t size = 0;
 	struct uartlite_platdata *plat = dev_get_platdata(dev);
 
-	plat->regs = (struct uartlite *)devfdt_get_addr(dev);
-	debug("plat->regs = %p\n", plat->regs);
+	debug("dev is %p, plat is %p -> %x\n", dev, plat, *(uint32_t*)plat);
+	// plat->regs = (struct uartlite *)0xbfd03000;
+	// plat->regs = (struct uartlite *)devfdt_get_addr(dev);
+	plat->regs = (struct uartlite *)fdtdec_get_addr_size(gd->fdt_blob, dev_of_offset(dev), "reg", &size);
+	debug("*plat=%x, plat->regs = %p\n", *(uint32_t*)plat, plat->regs);
+	if(plat->regs == (void*)0xFFFFFFFF)
+	  out_be32(NULL, 0);
 
 	return 0;
 }
+
 
 static const struct dm_serial_ops uartlite_serial_ops = {
 	.putc = uartlite_serial_putc,
@@ -111,7 +131,7 @@ U_BOOT_DRIVER(serial_uartlite) = {
 	.name	= "njuoop_uartlite",
 	.id	= UCLASS_SERIAL,
 	.of_match = uartlite_serial_ids,
-	.ofdata_to_platdata = uartlite_serial_ofdata_to_platdata,
+	// .ofdata_to_platdata = uartlite_serial_ofdata_to_platdata,
 	.platdata_auto_alloc_size = sizeof(struct uartlite_platdata),
 	.probe = uartlite_serial_probe,
 	.ops	= &uartlite_serial_ops,
@@ -123,7 +143,7 @@ U_BOOT_DRIVER(serial_uartlite) = {
 static uartlite_platdata uartlite_platdata;
 
 U_BOOT_DEVICE(serial_njuoop) = {
-  .name = "serial",
+  .name = "njuoop_uartlite", // should be same as U_BOOT_DRIVER
   .platdata = &uartlite_platdata,
 };
 */

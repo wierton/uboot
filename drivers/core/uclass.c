@@ -260,6 +260,7 @@ int uclass_find_device_by_seq(enum uclass_id id, int seq_or_req_seq,
 	if (seq_or_req_seq == -1)
 		return -ENODEV;
 	ret = uclass_get(id, &uc);
+	debug("\e[31mXX\e[0m: uclass get return %d, uc=%p\n", ret, uc);
 	if (ret)
 		return ret;
 

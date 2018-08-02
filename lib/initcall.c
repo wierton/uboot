@@ -6,8 +6,25 @@
 #include <common.h>
 #include <initcall.h>
 #include <efi.h>
+#include <dm.h>
+
+/* defined in internal */
+struct uclass *uclass_find(enum uclass_id key);
 
 DECLARE_GLOBAL_DATA_PTR;
+
+void check_serial_addr(void) {
+  struct uclass *uc = uclass_find(UCLASS_SERIAL);
+  struct udevice *dev = NULL;
+
+  debug("\e[33muc@%p\e[0m\n", uc);
+  if(!uc) return;
+  uclass_foreach_dev(dev, uc) {
+	void *p = (void *)devfdt_get_addr(dev);
+	debug("\e[33maddr@%p\e[0m\n", p);
+  }
+  debug("\e[33mend\e[0m\n");
+}
 
 int initcall_run_list(const init_fnc_t init_sequence[])
 {
@@ -27,6 +44,7 @@ int initcall_run_list(const init_fnc_t init_sequence[])
 			debug(" (relocated to %p)\n", (char *)*init_fnc_ptr);
 		else
 			debug("\n");
+		check_serial_addr();
 		ret = (*init_fnc_ptr)();
 		if (ret) {
 			printf("initcall sequence %p failed at call %p (err=%d)\n",
