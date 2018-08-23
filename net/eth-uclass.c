@@ -519,8 +519,9 @@ static int eth_post_probe(struct udevice *dev)
 		printf("\nWarning: %s (eth%d) using random MAC address - %pM\n",
 		       dev->name, dev->seq, pdata->enetaddr);
 #else
-		printf("\nError: %s address not set.\n",
-		       dev->name);
+		const u8 *addr = pdata->enetaddr;
+		printf("\nError: %s address not set or [%02x %02x %02x %02x %02x %02x] not valid.\n",
+		       dev->name, addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]);
 		return -EINVAL;
 #endif
 	}
