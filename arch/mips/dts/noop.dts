@@ -26,19 +26,18 @@
 
 	memory {
 		device_type = "memory";
-		/* ddr start at 256M and size 256M */
-		reg = <0x1000000 0x20000000>;
+		/* ddr start at 256M and size 128M */
+		reg = <0x80000000 0x10000000>;
 	};
 
-	njuoop_uartlite: serial@bfd03000 {
+	njuoop_uartlite: serial@bfe50000 {
 	  device_type = "serial";
 	  compatible = "njuoop_uartlite";
-	  /* unmapped uncached memory start at 0xA0000000 */
-	  reg = <0xbfd03000 0x1000>;
+	  reg = <0xbfe50000 0x1000>;
 	  reg-shift = <2>;
 	};
 
-	njuoop_spi: spi@bfd04000 {
+	njuoop_spi: spi@bfe40000 {
         #address-cells = <1>;
         #size-cells = <0>;
 		compatible = "xlnx,xps-spi-2.00.a";
@@ -53,12 +52,12 @@
         };
 	};
 
-	axi_ethernetlite: ethernet@bc030000 {
+	axi_ethernetlite: ethernet@bff00000 {
 		compatible = "xlnx,xps-ethernetlite-1.00.a";
 		device_type = "network";
 		local-mac-address = [08 86 4C 0D F7 09];
 		phy-handle = <&phy0>;
-		reg = <0xbc030000 0x10000>;
+		reg = <0xbff00000 0x10000>;
 		xlnx,duplex = <0x1>;
 		xlnx,include-global-buffers = <0x1>;
 		xlnx,include-internal-loopback = <0x0>;

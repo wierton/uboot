@@ -53,7 +53,7 @@
 
 /* Cached addr */
 #define CONFIG_SYS_SDRAM_BASE		0x80000000
-#define CONFIG_SYS_SDRAM_SIZE (16 * 1024 * 1024)
+#define CONFIG_SYS_SDRAM_SIZE (128 * 1024 * 1024)
 
 /* default load address */
 #define CONFIG_SYS_LOAD_ADDR		0x80000000

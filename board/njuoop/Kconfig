@@ -10,6 +10,6 @@ config SYS_CONFIG_NAME
     default "mips32_njuoop"
 
 config SYS_TEXT_BASE
-    default 0x80000000
+    default 0xbfc00000
 
 endif
