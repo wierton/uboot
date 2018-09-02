@@ -13,6 +13,7 @@
 #include <asm/io.h>
 #include <linux/compiler.h>
 #include <serial.h>
+#include <wait_bit.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -97,13 +98,15 @@ static int uartlite_serial_probe(struct udevice *dev)
 	in_be32(&regs->control);
 	*/
 
+    fdt_addr_t addr = 0;
 	fdt_size_t size = 0;
 	struct uartlite_platdata *plat = dev_get_platdata(dev);
 
 	debug("dev is %p, plat is %p -> %x\n", dev, plat, *(uint32_t*)plat);
 	// plat->regs = (struct uartlite *)0xbfd03000;
 	// plat->regs = (struct uartlite *)devfdt_get_addr(dev);
-	plat->regs = (struct uartlite *)fdtdec_get_addr_size(gd->fdt_blob, dev_of_offset(dev), "reg", &size);
+	addr = fdtdec_get_addr_size(gd->fdt_blob, dev_of_offset(dev), "reg", &size);
+	plat->regs = ioremap(addr, size);
 	debug("*plat=%x, plat->regs = %p\n", *(uint32_t*)plat, plat->regs);
 	if(plat->regs == (void*)0xFFFFFFFF)
 	  out_be32(NULL, 0);
