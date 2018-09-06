@@ -138,7 +138,9 @@ void relocate_code(ulong start_addr_sp, gd_t *new_gd, ulong relocaddr)
 	}
 
 	/* Ensure the icache is coherent */
+	debug("try ro flush cache\n");
 	flush_cache(relocaddr, length);
+	debug("flush cache end\n");
 
 	/* Clear the .bss section */
 	bss_start = (uint8_t *)((unsigned long)__bss_start + off);
