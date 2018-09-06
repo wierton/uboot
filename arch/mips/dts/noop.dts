@@ -8,6 +8,7 @@
 
 	chosen {
 	  stdout-path = "serial:115200ns";
+	  bootargs = "console=tty1 lpj=9600700 console=ttyS0,115200n8 earlyprintk cca=0 root=/dev/mmcblk0p2 rootfstype=ext4 mem=512M rootwait";
 	};
 
 	aliases {
@@ -16,13 +17,6 @@
 	  spi = &njuoop_spi;
 	  ethernet = &axi_ethernetlite;
 	};
-
-	/*
-	chosen {
-		bootargs = "console=ttyPS0,115200 earlyprintk root=/dev/mmcblk0p2 rootfstype=ext4 mem=512M rootwait";
-		stdout-path = "serial0:115200ns";
-	};
-	*/
 
 	memory {
 		device_type = "memory";
