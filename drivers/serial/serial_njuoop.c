@@ -51,17 +51,6 @@ static int uartlite_serial_putc(struct udevice *dev, const char ch)
 
 	out_be32(&regs->tx_fifo, ch & 0xff);
 
-  /*
-	struct uartlite_platdata *priv = dev_get_priv(dev);
-
-	struct uartlite *regs = plat->regs;
-
-	if (in_be32(&regs->status) & SR_TX_FIFO_FULL)
-		return -EAGAIN;
-
-	out_be32(&regs->tx_fifo, ch & 0xff);
-
-  */
 	return 0;
 }
 

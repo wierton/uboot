@@ -365,26 +365,21 @@ __weak int dm_scan_other(bool pre_reloc_only)
 	return 0;
 }
 
-void check_serial_addr(const char *);
-
 int dm_init_and_scan(bool pre_reloc_only)
 {
 	int ret;
 
-	check_serial_addr("stage1");
 	ret = dm_init(IS_ENABLED(CONFIG_OF_LIVE));
 	if (ret) {
 		debug("dm_init() failed: %d\n", ret);
 		return ret;
 	}
-	check_serial_addr("stage2");
 	ret = dm_scan_platdata(pre_reloc_only);
 	if (ret) {
 		debug("dm_scan_platdata() failed: %d\n", ret);
 		return ret;
 	}
 
-	check_serial_addr("stage3");
 	if (CONFIG_IS_ENABLED(OF_CONTROL) && !CONFIG_IS_ENABLED(OF_PLATDATA)) {
 		ret = dm_extended_scan_fdt(gd->fdt_blob, pre_reloc_only);
 		if (ret) {
@@ -393,7 +388,6 @@ int dm_init_and_scan(bool pre_reloc_only)
 		}
 	}
 
-	check_serial_addr("stage4");
 	ret = dm_scan_other(pre_reloc_only);
 	if (ret)
 		return ret;

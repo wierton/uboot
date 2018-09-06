@@ -81,7 +81,6 @@ static void serial_find_console_or_panic(void)
 
 	if (CONFIG_IS_ENABLED(OF_PLATDATA)) {
 		uclass_first_device(UCLASS_SERIAL, &dev);
-		debug("dev is %p\n", dev);
 		if (dev) {
 			gd->cur_serial_dev = dev;
 			return;
@@ -89,9 +88,7 @@ static void serial_find_console_or_panic(void)
 	} else if (CONFIG_IS_ENABLED(OF_CONTROL) && blob) {
 		/* Live tree has support for stdout */
 		if (of_live_active()) {
-			debug("of_live_active is true\n");
 			struct device_node *np = of_get_stdout();
-			debug("np is %p\n", np);
 
 			if (np && !uclass_get_device_by_ofnode(UCLASS_SERIAL,
 					np_to_ofnode(np), &dev)) {
@@ -99,7 +96,6 @@ static void serial_find_console_or_panic(void)
 				return;
 			}
 		} else {
-			debug("of_live_active is false\n");
 			if (!serial_check_stdout(blob, &dev)) {
 				gd->cur_serial_dev = dev;
 				return;
@@ -107,7 +103,6 @@ static void serial_find_console_or_panic(void)
 		}
 	}
 	if (!SPL_BUILD || !CONFIG_IS_ENABLED(OF_CONTROL) || !blob) {
-	  debug("!SPL_BUILD || !CONFIG_IS_ENABLED(OF_CONTROL) || !blob\n");
 		/*
 		 * Try to use CONFIG_CONS_INDEX if available (it is numbered
 		 * from 1!).
@@ -123,7 +118,6 @@ static void serial_find_console_or_panic(void)
 #endif
 
 #ifdef CONFIG_SERIAL_SEARCH_ALL
-	  debug("AA: uclass_get_device_by_seq\n");
 		if (!uclass_get_device_by_seq(UCLASS_SERIAL, INDEX, &dev) ||
 		    !uclass_get_device(UCLASS_SERIAL, INDEX, &dev)) {
 			if (dev->flags & DM_FLAG_ACTIVATED) {
@@ -132,7 +126,6 @@ static void serial_find_console_or_panic(void)
 			}
 		}
 
-	  debug("AA: uclass_first_device_check\n");
 		/* Search for any working device */
 		for (ret = uclass_first_device_check(UCLASS_SERIAL, &dev);
 		     dev;
@@ -144,7 +137,6 @@ static void serial_find_console_or_panic(void)
 			}
 		}
 #else
-	  debug("AA: uclass_get_device_by_seq\n");
 		if (!uclass_get_device_by_seq(UCLASS_SERIAL, INDEX, &dev) ||
 		    !uclass_get_device(UCLASS_SERIAL, INDEX, &dev) ||
 		    (!uclass_first_device(UCLASS_SERIAL, &dev) && dev)) {
@@ -165,7 +157,6 @@ static void serial_find_console_or_panic(void)
 int serial_init(void)
 {
 	serial_find_console_or_panic();
-	debug("XX serial_init end...\n");
 	gd->flags |= GD_FLG_SERIAL_READY;
 
 	return 0;
