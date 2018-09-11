@@ -292,8 +292,10 @@ static int setup_phy(struct udevice *dev)
 	}
 
 	/* interface - look at tsec */
+	debug("before phy connect\n");
 	phydev = phy_connect(emaclite->bus, emaclite->phyaddr, dev,
 			     PHY_INTERFACE_MODE_MII);
+	debug("after phy connect\n");
 	/*
 	 * Phy can support 1000baseT but device NOT that's why phydev->supported
 	 * must be setup for 1000baseT. phydev->advertising setups what speeds
@@ -345,10 +347,13 @@ static int emaclite_start(struct udevice *dev)
 	if (emaclite->txpp) {
 		/* The same operation with PONG TX */
 		__raw_writel(0, &regs->tx_pong_tsr);
+	debug("init mac: %d\n", __LINE__);
 		xemaclite_alignedwrite(pdata->enetaddr, &regs->tx_pong,
 				       ENET_ADDR_LENGTH);
+	debug("init mac: %d\n", __LINE__);
 		__raw_writel(ENET_ADDR_LENGTH, &regs->tx_pong_tplr);
 		__raw_writel(XEL_TSR_PROG_MAC_ADDR, &regs->tx_pong_tsr);
+	debug("init mac: %d\n", __LINE__);
 		while ((__raw_readl(&regs->tx_pong_tsr) &
 		       XEL_TSR_PROG_MAC_ADDR) != 0)
 			;
@@ -417,7 +422,7 @@ static int emaclite_send(struct udevice *dev, void *ptr, int len)
 	/* Determine if the expected buffer address is empty */
 	reg = __raw_readl(&regs->tx_ping_tsr);
 	if ((reg & XEL_TSR_XMIT_BUSY_MASK) == 0) {
-		debug("Send packet from tx_ping buffer\n");
+		// debug("Send packet from tx_ping buffer\n");
 		/* Write the frame to the buffer */
 		xemaclite_alignedwrite(ptr, &regs->tx_ping, len);
 		__raw_writel(len
@@ -463,13 +468,13 @@ static int emaclite_recv(struct udevice *dev, int flags, uchar **packetp)
 try_again:
 	if (!emaclite->use_rx_pong_buffer_next) {
 		reg = __raw_readl(&regs->rx_ping_rsr);
-		debug("Testing data at rx_ping\n");
+		// debug("Testing data at rx_ping\n");
 		if ((reg & XEL_RSR_RECV_DONE_MASK) == XEL_RSR_RECV_DONE_MASK) {
-			debug("Data found in rx_ping buffer\n");
+			// debug("Data found in rx_ping buffer\n");
 			addr = &regs->rx_ping;
 			ack = &regs->rx_ping_rsr;
 		} else {
-			debug("Data not found in rx_ping buffer\n");
+			// debug("Data not found in rx_ping buffer\n");
 			/* Pong buffer is not available - return immediately */
 			if (!emaclite->rxpp)
 				return -1;
@@ -483,13 +488,13 @@ try_again:
 		}
 	} else {
 		reg = __raw_readl(&regs->rx_pong_rsr);
-		debug("Testing data at rx_pong\n");
+		// debug("Testing data at rx_pong\n");
 		if ((reg & XEL_RSR_RECV_DONE_MASK) == XEL_RSR_RECV_DONE_MASK) {
-			debug("Data found in rx_pong buffer\n");
+			// debug("Data found in rx_pong buffer\n");
 			addr = &regs->rx_pong;
 			ack = &regs->rx_pong_rsr;
 		} else {
-			debug("Data not found in rx_pong buffer\n");
+			// debug("Data not found in rx_pong buffer\n");
 			/* Try ping buffer if this is first attempt */
 			if (attempt++)
 				return -1;
@@ -533,7 +538,7 @@ try_again:
 	reg &= ~XEL_RSR_RECV_DONE_MASK;
 	__raw_writel(reg, ack);
 
-	debug("Packet receive from 0x%p, length %dB\n", addr, length);
+	// debug("Packet receive from 0x%p, length %dB\n", addr, length);
 	*packetp = etherrxbuff;
 	return length;
 }
@@ -545,14 +550,14 @@ static int emaclite_miiphy_read(struct mii_dev *bus, int addr,
 	u16 val = 0;
 
 	ret = phyread(bus->priv, addr, reg, &val);
-	debug("emaclite: Read MII 0x%x, 0x%x, 0x%x, %d\n", addr, reg, val, ret);
+	// debug("emaclite: Read MII 0x%x, 0x%x, 0x%x, %d\n", addr, reg, val, ret);
 	return val;
 }
 
 static int emaclite_miiphy_write(struct mii_dev *bus, int addr, int devad,
 				 int reg, u16 value)
 {
-	debug("emaclite: Write MII 0x%x, 0x%x, 0x%x\n", addr, reg, value);
+	// debug("emaclite: Write MII 0x%x, 0x%x, 0x%x\n", addr, reg, value);
 	return phywrite(bus->priv, addr, reg, value);
 }
 

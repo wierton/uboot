@@ -106,8 +106,13 @@ static inline unsigned long scache_line_size(void)
 	}								\
 } while (0)
 
+//                               set  way  linesize dup
+volatile uint8_t cache_flush_array[256 * 4 * 8 * 64 + 4];
+
 void flush_cache(ulong start_addr, ulong size)
 {
+  debug("mips flush cache start...\n");
+
 	unsigned long ilsize = icache_line_size();
 	unsigned long dlsize = dcache_line_size();
 	unsigned long slsize = scache_line_size();
@@ -138,6 +143,25 @@ ops_done:
 
 	/* ensure the pipeline doesn't contain now-invalid instructions */
 	instruction_hazard_barrier();
+
+#ifdef _CONFIG_MACH_NJUOOP
+
+#warning "should not use this flush cache function"
+
+  const size_t cache_size = ARRAY_SIZE(cache_flush_array);
+  uint32_t *p = (void *)&cache_flush_array[cache_size - 4];
+  *p = 0x03e00008;
+
+  // clear dcache
+  for(int i = 0; i < cache_size - 4; i++)
+	cache_flush_array[i] = 0;
+
+  // clear icache
+  ((void (*)(void))(void *)&cache_flush_array)();
+
+#endif
+
+  debug("mips flush cache end...\n");
 }
 
 void flush_dcache_range(ulong start_addr, ulong stop)

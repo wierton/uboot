@@ -31,11 +31,11 @@
 	  reg-shift = <2>;
 	};
 
-	njuoop_spi: spi@bfe40000 {
+	njuoop_spi: spi@bfe80000 {
         #address-cells = <1>;
         #size-cells = <0>;
 		compatible = "xlnx,xps-spi-2.00.a";
-		reg = <0x1fe40000 0x1000>;
+		reg = <0x1fe80000 0x10000>;
 		fifo-size = <256>;
 		xlnx,spi-mode = <2>; //quad spi mode
 
