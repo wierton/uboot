@@ -41,4 +41,8 @@ tune-$(CONFIG_MIPS_TUNE_74KC) += -mtune=74kc
 # Include default header files
 cflags-y += -I$(srctree)/arch/mips/include/asm/mach-generic
 
+ifdef CONFIG_MACH_NJUOOP
+cflags-y += -mno-branch-likely -mno-imadd -mno-mad
+endif
+
 PLATFORM_CPPFLAGS += $(arch-y) $(tune-y) $(cflags-y)
