@@ -48,6 +48,9 @@ static void linux_cmdline_init(void)
 {
 	linux_argc = 1;
 	linux_argv = (char **)UNCACHED_SDRAM(gd->bd->bi_boot_params);
+    printf("&bi_boot_params: %p\n", &(gd->bd->bi_boot_params));
+    printf("bi_boot_params: %08x\n", (uint32_t)gd->bd->bi_boot_params);
+    printf("bi_boot_params: %08x\n", (uint32_t)UNCACHED_SDRAM(gd->bd->bi_boot_params));
 	linux_argv[0] = 0;
 	linux_argp = (char *)(linux_argv + LINUX_MAX_ARGS);
 }
@@ -147,6 +150,7 @@ static void linux_env_set(const char *env_name, const char *env_val)
 {
 	if (linux_env_idx < LINUX_MAX_ENVS - 1) {
 		linux_env[linux_env_idx] = linux_env_p;
+        printf("linux_env: %p\n", linux_env_p);
 
 		strcpy(linux_env_p, env_name);
 		linux_env_p += strlen(env_name);
