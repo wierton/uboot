@@ -25,7 +25,7 @@
 	aliases {
 	  serial = &njuoop_uartlite;
 	  console = &njuoop_uartlite;
-	  spi = &njuoop_spi;
+	  spi0 = &njuoop_qspi;
 	  ethernet = &axi_ethernetlite;
 	};
 
@@ -47,7 +47,7 @@
 	  reg-shift = <2>;
 	};
 
-	njuoop_spi: spi@bfe80000 {
+	njuoop_qspi: spi@bfe80000 {
         #address-cells = <1>;
         #size-cells = <0>;
 		compatible = "xlnx,xps-spi-2.00.a";
