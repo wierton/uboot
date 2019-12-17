@@ -11,11 +11,27 @@
 	  bootargs = "console=tty1 lpj=9600700 console=ttyS0,115200n8 earlyprintk cca=0 root=/dev/mmcblk0p2 rootfstype=ext4 mem=512M rootwait";
 	};
 
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		cpu@0 {
+			device_type = "cpu";
+			compatible = "mips,4Kc";
+			clocks	= <&ext>;
+			reg = <0>;
+		};
+	};
+
 	aliases {
 	  serial = &njuoop_uartlite;
 	  console = &njuoop_uartlite;
 	  spi = &njuoop_spi;
 	  ethernet = &axi_ethernetlite;
+	};
+
+	ext: ext {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
 	};
 
 	memory {
@@ -70,4 +86,8 @@
 			} ;
 		} ;
     } ;
+};
+
+&ext {
+	clock-frequency = <50000000>;
 };
