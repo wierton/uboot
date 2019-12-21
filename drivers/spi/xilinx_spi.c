@@ -175,7 +175,7 @@ static u32 xilinx_spi_fill_txfifo(struct udevice *bus, const u8 *txp,
 	while (txbytes && !(readl(&regs->spisr) & SPISR_TX_FULL) &&
 	       i < priv->fifo_depth) {
 		d = txp ? *txp++ : CONFIG_XILINX_SPI_IDLE_VAL;
-		debug("spi_xfer: tx:%x ", d);
+		// debug("spi_xfer: tx:%x ", d);
 		/* write out and wait for processing (receive data) */
 		writel(d & SPIDTR_8BIT_MASK, &regs->spidtr);
 		txbytes--;
@@ -196,11 +196,11 @@ static u32 xilinx_spi_read_rxfifo(struct udevice *bus, u8 *rxp, u32 rxbytes)
 		d = readl(&regs->spidrr) & SPIDRR_8BIT_MASK;
 		if (rxp)
 			*rxp++ = d;
-		debug("spi_xfer: rx:%x\n", d);
+		// debug("spi_xfer: rx:%x\n", d);
 		rxbytes--;
 		i++;
 	}
-	debug("Rx_done\n");
+	// debug("Rx_done\n");
 
 	return i;
 }
@@ -254,8 +254,8 @@ static int xilinx_spi_xfer(struct udevice *dev, unsigned int bitlen,
 	u32 reg, count, timeout;
 	int ret;
 
-	debug("spi_xfer: bus:%i cs:%i bitlen:%i bytes:%i flags:%lx\n",
-	      bus->seq, slave_plat->cs, bitlen, bytes, flags);
+	// debug("spi_xfer: bus:%i cs:%i bitlen:%i bytes:%i flags:%lx\n",
+	      // bus->seq, slave_plat->cs, bitlen, bytes, flags);
 
 	if (bitlen == 0)
 		goto done;
@@ -276,7 +276,7 @@ static int xilinx_spi_xfer(struct udevice *dev, unsigned int bitlen,
 	 * block to FLASH. STARTUP block don't provide clock as soon
 	 * as QSPI provides command. So first command fails.
 	 */
-	xilinx_spi_startup_block(dev, bytes, dout, din);
+	// xilinx_spi_startup_block(dev, bytes, dout, din);
 
 	while (txbytes && rxbytes) {
 		count = xilinx_spi_fill_txfifo(bus, txp, txbytes);
@@ -293,12 +293,12 @@ static int xilinx_spi_xfer(struct udevice *dev, unsigned int bitlen,
 			return ret;
 		}
 
-		debug("txbytes:0x%x,txp:0x%p\n", txbytes, txp);
+		// debug("txbytes:0x%x,txp:0x%p\n", txbytes, txp);
 		count = xilinx_spi_read_rxfifo(bus, rxp, rxbytes);
 		rxbytes -= count;
 		if (rxp)
 			rxp += count;
-		debug("rxbytes:0x%x rxp:0x%p\n", rxbytes, rxp);
+		// debug("rxbytes:0x%x rxp:0x%p\n", rxbytes, rxp);
 	}
 
  done:
